@@ -2,7 +2,7 @@
 public struct SwiftUIComponentsKit {
     public init() {}
 
-    public func hello() -> String {
+    public func welcome() -> String {
         return "Esto es una prueba"
     }
 }
