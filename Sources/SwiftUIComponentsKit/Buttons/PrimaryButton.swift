@@ -1,3 +1,10 @@
+//
+//  PrimaryButton.swift
+//  SwiftUIComponentsKit
+//
+//  Created by Liz Isasi on 22/11/2025.
+//
+
 import SwiftUI
 
 public struct PrimaryButton: View {
