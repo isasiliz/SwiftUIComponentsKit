@@ -8,13 +8,6 @@
 import SwiftUI
 import UIKit
 
-public enum CustomTextFieldAction {
-    case beginEditing
-    case textDidChange(String)
-    case commit
-    case resignFirstResponder
-}
-
 public struct CustomTextField: View {
     
     let title: String
@@ -130,7 +123,7 @@ public struct CustomTextField: View {
                         onAction?(.commit)
                     }
                 
-                if showsClearButton, !text.isEmpty {
+                if showsClearButton, isFocused, !text.isEmpty {
                     Button {
                         text = ""
                         hasEdited = true
