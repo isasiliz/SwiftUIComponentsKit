@@ -12,6 +12,7 @@ public struct PrimaryButton: View {
     let variant: ButtonVariant
     let height: CGFloat
     let isLoading: Bool
+    let isDisabled: Bool
     let action: () -> Void
 
     public init(
@@ -19,30 +20,35 @@ public struct PrimaryButton: View {
         variant: ButtonVariant = .primary,
         height: CGFloat = 48,
         isLoading: Bool = false,
+        isDisabled: Bool = false,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.variant = variant
         self.height = height
         self.isLoading = isLoading
+        self.isDisabled = isDisabled
         self.action = action
     }
 
     public var body: some View {
         let colors = variant.style
+        let shouldDisable = isLoading || isDisabled
+        let backgroundColor = shouldDisable ? colors.disabledBackground : colors.background
+        let foregroundColor = shouldDisable ? colors.disabledForeground : colors.foreground
 
         Button {
-            guard !isLoading else { return }
+            guard !shouldDisable else { return }
             action()
         } label: {
             HStack(spacing: 8) {
                 if isLoading {
                     ProgressView()
-                        .tint(colors.foreground)
+                        .tint(foregroundColor)
                 }
 
                 Text(title)
-                    .foregroundColor(colors.foreground)
+                    .foregroundColor(foregroundColor)
                     .font(.headline)
                     .lineLimit(1)
             }
@@ -50,10 +56,10 @@ public struct PrimaryButton: View {
             .frame(height: height)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(colors.background)
+                    .fill(backgroundColor)
             )
         }
-        .disabled(isLoading)
+        .disabled(shouldDisable)
     }
 }
 
@@ -62,9 +68,10 @@ public struct PrimaryButton: View {
     VStack(spacing: 16) {
         PrimaryButton(title: "Ingresar", variant: .primary) {}
         PrimaryButton(title: "Aceptar", variant: .secondary) {}
-        PrimaryButton(title: "Cerrar sesión", variant: .danger) {}
+        PrimaryButton(title: "Eliminar", variant: .danger) {}
         PrimaryButton(title: "Cancelar", variant: .neutral) {}
-        PrimaryButton(title: "Cargando…", isLoading: false) {}
+        PrimaryButton(title: "Deshabilitado", variant: .primary, isDisabled: true) {}
+        PrimaryButton(title: "Cargando…", isLoading: true) {}
     }
     .padding()
 }
