@@ -40,10 +40,11 @@ public struct CustomSegmentedControl: View {
             HStack(spacing: 0) {
                 ForEach(options, id: \.self) { option in
                     Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            selectedOption = option
-                        }
-                        onSelectionChanged?(option)
+                        Self.applySelection(
+                            option,
+                            selectedOption: &selectedOption,
+                            onSelectionChanged: onSelectionChanged
+                        )
                     } label: {
                         Text(option)
                             .font(.subheadline)
@@ -74,6 +75,19 @@ public struct CustomSegmentedControl: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
+    }
+}
+
+extension CustomSegmentedControl {
+    static func applySelection(
+        _ option: String,
+        selectedOption: inout String,
+        onSelectionChanged: ((String) -> Void)?
+    ) {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            selectedOption = option
+        }
+        onSelectionChanged?(option)
     }
 }
 

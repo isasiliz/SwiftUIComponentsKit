@@ -37,10 +37,11 @@ public struct CustomRadioButton: View {
             VStack(spacing: 14) {
                 ForEach(options, id: \.self) { option in
                     Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            selectedOption = option
-                        }
-                        onSelectionChanged?(option)
+                        Self.applySelection(
+                            option,
+                            selectedOption: &selectedOption,
+                            onSelectionChanged: onSelectionChanged
+                        )
                     } label: {
                         HStack(spacing: 12) {
                             ZStack {
@@ -70,6 +71,19 @@ public struct CustomRadioButton: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
+    }
+}
+
+extension CustomRadioButton {
+    static func applySelection(
+        _ option: String,
+        selectedOption: inout String,
+        onSelectionChanged: ((String) -> Void)?
+    ) {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            selectedOption = option
+        }
+        onSelectionChanged?(option)
     }
 }
 

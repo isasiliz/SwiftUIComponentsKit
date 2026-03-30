@@ -33,7 +33,7 @@ public struct PrimaryButton: View {
 
     public var body: some View {
         let colors = variant.style
-        let shouldDisable = isLoading || isDisabled
+        let shouldDisable = Self.shouldDisable(isLoading: isLoading, isDisabled: isDisabled)
         let backgroundColor = shouldDisable ? colors.disabledBackground : colors.background
         let foregroundColor = shouldDisable ? colors.disabledForeground : colors.foreground
 
@@ -60,6 +60,12 @@ public struct PrimaryButton: View {
             )
         }
         .disabled(shouldDisable)
+    }
+}
+
+extension PrimaryButton {
+    static func shouldDisable(isLoading: Bool, isDisabled: Bool) -> Bool {
+        isLoading || isDisabled
     }
 }
 
