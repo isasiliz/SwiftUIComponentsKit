@@ -6,7 +6,13 @@
 //
 
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#else
+public enum UIKeyboardType {
+    case `default`
+}
+#endif
 
 public struct CustomTextField: View {
     
@@ -97,7 +103,6 @@ public struct CustomTextField: View {
             
             HStack(spacing: 8) {
                 TextField(placeholder, text: $text)
-                    .keyboardType(keyboardType)
                     .textInputAutocapitalization(textInputAutocapitalization)
                     .autocorrectionDisabled(autocorrectionDisabled)
                     .focused($isFocused)
@@ -124,6 +129,9 @@ public struct CustomTextField: View {
                         hasEdited = true
                         onAction?(.commit)
                     }
+#if canImport(UIKit)
+                    .keyboardType(keyboardType)
+#endif
                 
                 if Self.shouldShowClearButton(showsClearButton: showsClearButton, isFocused: isFocused, text: text) {
                     Button {
