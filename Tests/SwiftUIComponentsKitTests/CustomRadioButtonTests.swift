@@ -1,6 +1,7 @@
 import XCTest
 @testable import SwiftUIComponentsKit
 
+@MainActor
 final class CustomRadioButtonTests: XCTestCase {
     func testInitialSelectionIsPreserved() {
         var selected = "Cone"

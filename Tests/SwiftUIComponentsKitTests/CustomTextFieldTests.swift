@@ -1,6 +1,7 @@
 import XCTest
 @testable import SwiftUIComponentsKit
 
+@MainActor
 final class CustomTextFieldTests: XCTestCase {
     func testEnforcedTextTrimsToMaxLengthWhenEnabled() {
         let result = CustomTextField.enforcedText(for: "123456", maxLength: 4, enforcesMaxLength: true)

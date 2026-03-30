@@ -1,6 +1,7 @@
 import XCTest
 @testable import SwiftUIComponentsKit
 
+@MainActor
 final class CustomSegmentedControlTests: XCTestCase {
     func testInitialSelectionIsPreserved() {
         var selected = "Medium"

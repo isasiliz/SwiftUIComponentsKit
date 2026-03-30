@@ -1,6 +1,7 @@
 import XCTest
 @testable import SwiftUIComponentsKit
 
+@MainActor
 final class PrimaryButtonTests: XCTestCase {
     func testLoadingStateDisablesButton() {
         XCTAssertTrue(PrimaryButton.shouldDisable(isLoading: true, isDisabled: false))
