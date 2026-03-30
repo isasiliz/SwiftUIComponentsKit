@@ -6,8 +6,7 @@ import PackageDescription
 let package = Package(
     name: "SwiftUIComponentsKit",
     platforms: [
-        .iOS(.v17),
-        .macOS(.v14)
+        .iOS(.v17)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -20,6 +19,9 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "SwiftUIComponentsKit"),
-        
+        .testTarget(
+            name: "SwiftUIComponentsKitTests",
+            dependencies: ["SwiftUIComponentsKit"]
+        ),
     ]
 )

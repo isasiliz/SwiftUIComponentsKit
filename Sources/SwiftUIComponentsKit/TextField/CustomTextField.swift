@@ -6,7 +6,13 @@
 //
 
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#else
+public enum UIKeyboardType {
+    case `default`
+}
+#endif
 
 public struct CustomTextField: View {
     
@@ -74,15 +80,15 @@ public struct CustomTextField: View {
     }
     
     private var validationMessage: String? {
-        if let minLength, hasEdited, !text.isEmpty, text.count < minLength {
-            return minLengthMessage ?? "Please enter at least \(minLength) characters."
-        }
-        
-        if let maxLength, !enforcesMaxLength, text.count > maxLength {
-            return maxLengthMessage ?? "Please enter no more than \(maxLength) characters."
-        }
-        
-        return nil
+        Self.validationMessage(
+            text: text,
+            hasEdited: hasEdited,
+            minLength: minLength,
+            minLengthMessage: minLengthMessage,
+            maxLength: maxLength,
+            maxLengthMessage: maxLengthMessage,
+            enforcesMaxLength: enforcesMaxLength
+        )
     }
     
     private var currentBorderColor: Color {
@@ -97,7 +103,6 @@ public struct CustomTextField: View {
             
             HStack(spacing: 8) {
                 TextField(placeholder, text: $text)
-                    .keyboardType(keyboardType)
                     .textInputAutocapitalization(textInputAutocapitalization)
                     .autocorrectionDisabled(autocorrectionDisabled)
                     .focused($isFocused)
@@ -111,19 +116,24 @@ public struct CustomTextField: View {
                     }
                     .onChange(of: text) { _, newValue in
                         hasEdited = true
-                        
-                        if let maxLength, enforcesMaxLength, newValue.count > maxLength {
-                            text = String(newValue.prefix(maxLength))
-                        }
-                        
+
+                        text = Self.enforcedText(
+                            for: newValue,
+                            maxLength: maxLength,
+                            enforcesMaxLength: enforcesMaxLength
+                        )
+
                         onAction?(.textDidChange(text))
                     }
                     .onSubmit {
                         hasEdited = true
                         onAction?(.commit)
                     }
+#if canImport(UIKit)
+                    .keyboardType(keyboardType)
+#endif
                 
-                if showsClearButton, isFocused, !text.isEmpty {
+                if Self.shouldShowClearButton(showsClearButton: showsClearButton, isFocused: isFocused, text: text) {
                     Button {
                         text = ""
                         hasEdited = true
@@ -151,6 +161,47 @@ public struct CustomTextField: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
+    }
+}
+
+extension CustomTextField {
+    static func enforcedText(
+        for newValue: String,
+        maxLength: Int?,
+        enforcesMaxLength: Bool
+    ) -> String {
+        guard let maxLength, enforcesMaxLength, newValue.count > maxLength else {
+            return newValue
+        }
+        return String(newValue.prefix(maxLength))
+    }
+
+    static func validationMessage(
+        text: String,
+        hasEdited: Bool,
+        minLength: Int?,
+        minLengthMessage: String?,
+        maxLength: Int?,
+        maxLengthMessage: String?,
+        enforcesMaxLength: Bool
+    ) -> String? {
+        if let minLength, hasEdited, !text.isEmpty, text.count < minLength {
+            return minLengthMessage ?? "Please enter at least \(minLength) characters."
+        }
+
+        if let maxLength, !enforcesMaxLength, text.count > maxLength {
+            return maxLengthMessage ?? "Please enter no more than \(maxLength) characters."
+        }
+
+        return nil
+    }
+
+    static func shouldShowClearButton(
+        showsClearButton: Bool,
+        isFocused: Bool,
+        text: String
+    ) -> Bool {
+        showsClearButton && isFocused && !text.isEmpty
     }
 }
 
