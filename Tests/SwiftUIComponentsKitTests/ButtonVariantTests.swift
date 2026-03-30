@@ -42,22 +42,11 @@ private func assertColorEquals(
 }
 
 private func colorComponents(_ color: Color) -> [CGFloat] {
-#if canImport(UIKit)
     let uiColor = UIColor(color)
     guard let components = uiColor.cgColor.components else {
         return []
     }
     return normalized(components: components)
-#elseif canImport(AppKit)
-    let nsColor = NSColor(color)
-    guard let converted = nsColor.usingColorSpace(.deviceRGB),
-          let components = converted.cgColor.components else {
-        return []
-    }
-    return normalized(components: components)
-#else
-    return []
-#endif
 }
 
 private func normalized(components: [CGFloat]) -> [CGFloat] {

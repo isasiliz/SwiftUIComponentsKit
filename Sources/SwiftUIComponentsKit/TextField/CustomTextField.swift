@@ -123,9 +123,7 @@ public struct CustomTextField: View {
                         hasEdited = true
                         onAction?(.commit)
                     }
-#if canImport(UIKit)
                     .keyboardType(keyboardType)
-#endif
                 
                 if Self.shouldShowClearButton(showsClearButton: showsClearButton, isFocused: isFocused, text: text) {
                     Button {
