@@ -6,13 +6,7 @@
 //
 
 import SwiftUI
-#if canImport(UIKit)
 import UIKit
-#else
-public enum UIKeyboardType {
-    case `default`
-}
-#endif
 
 public struct CustomTextField: View {
     
